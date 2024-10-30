@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour
     float vertP = 5;
     float power = 3;
 
+    private bool inputForgiveness = false;
+
     private bool trackerCD = false;
     float trackerStart;
     public float trackerInterval = 0.5f;
@@ -120,22 +122,32 @@ public class PlayerMovement : MonoBehaviour
         }
         //ground movement
         if (movable)
-        {            
-            rb.velocity = new Vector2(hori * speed,rb.velocity.y);   
-            if (hori < 0)
+        { 
+            
+            if (!inputForgiveness)
             {
-                sprite.flipX = true;
-                rightFacing = false;
+                rb.velocity = new Vector2(hori * speed, rb.velocity.y);
+                if (hori < 0)
+                {
+                    sprite.flipX = true;
+                    rightFacing = false;
+                }
+                else if (hori > 0)
+                {
+                    sprite.flipX = false;
+                    rightFacing = true;
+                }
             }
-            else if (hori > 0)
+            else if (hori == 0)
             {
-                sprite.flipX = false;
-                rightFacing = true;
+                inputForgiveness = false;
             }
             
         }
-        //begin charging
-        if (Input.GetKeyDown(KeyCode.Space) && !charging && !flying)
+        
+            //begin charging
+
+            if (Input.GetKeyDown(KeyCode.Space) && !charging && !flying)
         {
             rb.velocity = new Vector2(0, rb.velocity.y / 4);
             rb.gravityScale = 0.1f;
@@ -145,6 +157,16 @@ public class PlayerMovement : MonoBehaviour
             {
                 power *= -1f;
             }
+        }
+        if (Input.GetKeyDown(KeyCode.LeftShift) && charging && !flying)
+        {
+            movable = true;
+            charging = false;
+            rb.gravityScale = 1f;
+            trackerCD = false;
+            vertP = 5;
+            power = 3;
+            inputForgiveness = true;
         }
         //release the jump
         if (Input.GetKeyUp(KeyCode.Space) && charging)
