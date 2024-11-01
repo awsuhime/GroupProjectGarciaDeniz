@@ -7,9 +7,10 @@ public class PlayerHealth : MonoBehaviour
     private Checkpoint checkpointScript;
     private int priority;
     public GameObject currentCheckpoint;
+    private Rigidbody2D rb;
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -47,6 +48,7 @@ public class PlayerHealth : MonoBehaviour
     private void Respawn()
     {
         gameObject.transform.position = currentCheckpoint.transform.position;
+        rb.velocity = Vector2.zero;
     }
 
 
