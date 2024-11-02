@@ -114,6 +114,7 @@ public class PlayerMovement : MonoBehaviour
                     GameObject target = Instantiate(tracker, new Vector2(transform.position.x, transform.position.y + 1), transform.rotation);
                     trackerRb = target.GetComponent<Rigidbody2D>();
                     trackerRb.velocity = new Vector2(power, vertP);
+
                     trackerCD = true;
                     trackerStart = Time.time;
 
@@ -189,6 +190,7 @@ public class PlayerMovement : MonoBehaviour
             flying = true;
             rb.gravityScale = 1f;
             rb.velocity = new Vector2(power, vertP);
+            transform.Translate(0, 0.1f,0);
             trackerCD = false;
             vertP = 5;
             power = 3;

@@ -17,10 +17,16 @@ public class groundDetector : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        
         if (playerMovement.flying)
         {
-            playerMovement.flying = false;
-            playerMovement.movable = true;
+            if (collision.CompareTag("Terrain"))
+            {
+                Debug.Log("Groundhit; name:" + collision.gameObject.name);
+                playerMovement.flying = false;
+                playerMovement.movable = true;
+            }
+           
         }
     }
 }
