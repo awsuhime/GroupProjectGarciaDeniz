@@ -5,6 +5,7 @@ using UnityEngine;
 public class groundDetector : MonoBehaviour
 {
     private PlayerMovement playerMovement;
+    public ParticleSystem dirtParticle;
     void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
@@ -23,6 +24,7 @@ public class groundDetector : MonoBehaviour
             if (collision.CompareTag("Terrain"))
             {
                 Debug.Log("Groundhit; name:" + collision.gameObject.name);
+                dirtParticle.Play();
                 playerMovement.flying = false;
                 playerMovement.movable = true;
             }
