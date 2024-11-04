@@ -8,9 +8,11 @@ public class PlayerHealth : MonoBehaviour
     private int priority;
     public GameObject currentCheckpoint;
     private Rigidbody2D rb;
+    private PlayerMovement playerMovement;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     void Update()
@@ -47,6 +49,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Respawn()
     {
+        playerMovement.ResetVariables();
         gameObject.transform.position = currentCheckpoint.transform.position;
         rb.velocity = Vector2.zero;
     }

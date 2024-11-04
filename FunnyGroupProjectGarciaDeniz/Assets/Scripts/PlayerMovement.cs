@@ -201,8 +201,22 @@ public class PlayerMovement : MonoBehaviour
 
 
     }
-    
+
+    public void ResetVariables()
+    {
+            movable = true;
+            charging = false;
+            rb.gravityScale = 1f;
+            trackerCD = false;
+            vertP = 5;
+            power = 3;
+            inputForgiveness = false;
+        flying = false;
+        charging = false;
+        animator.SetBool("Flying", false);
+        animator.SetBool("Crash", false);
+
+    }
 
 
-    
 }
