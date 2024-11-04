@@ -6,9 +6,12 @@ public class groundDetector : MonoBehaviour
 {
     private PlayerMovement playerMovement;
     public ParticleSystem dirtParticle;
+    private Animator animator;
+
     void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
+        animator = GetComponentInParent<Animator>();
     }
 
     void Update()
@@ -27,6 +30,8 @@ public class groundDetector : MonoBehaviour
                 dirtParticle.Play();
                 playerMovement.flying = false;
                 playerMovement.movable = true;
+                animator.SetBool("Flying", false);
+                animator.SetBool("Crash", false);
             }
            
         }

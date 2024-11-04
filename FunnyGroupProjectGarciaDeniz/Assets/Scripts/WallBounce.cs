@@ -5,9 +5,10 @@ using UnityEngine;
 public class WallBounce : MonoBehaviour
 {
     public Rigidbody2D playerRb;
+    private Animator animator;
     void Start()
     {
-        
+        animator = GetComponentInParent<Animator>();
     }
 
     void Update()
@@ -20,6 +21,7 @@ public class WallBounce : MonoBehaviour
         if (collision.CompareTag("Terrain"))
         {
             playerRb.velocity = new Vector2(playerRb.velocity.x * -0.5f, playerRb.velocity.y);
+            animator.SetBool("Crash", true);
         }
     }
 

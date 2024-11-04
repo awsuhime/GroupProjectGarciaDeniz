@@ -184,6 +184,8 @@ public class PlayerMovement : MonoBehaviour
         //release the jump
         if (Input.GetKeyUp(KeyCode.Space) && charging)
         {
+            animator.SetBool("Flying", true);
+
             animator.SetFloat("overallCharge", 0);
 
             charging = false;
@@ -194,8 +196,9 @@ public class PlayerMovement : MonoBehaviour
             trackerCD = false;
             vertP = 5;
             power = 3;
+
         }
-        
+
 
     }
     
