@@ -5,25 +5,28 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    //Characteristics
     public int speed = 1;
     public bool movable = true;
     private Rigidbody2D rb;
-    public GameObject tracker;
-    private Rigidbody2D trackerRb;
+    
+    //Visual Components
     private SpriteRenderer sprite;
     private Animator animator;
 
+    //Trajectory Visualization
+    public GameObject trackerPrefab;
+    public GameObject[] trackers;
+    public int numberOfTrackers = 9;
+
+    //Changing variables
     public bool gameStart = false;
     private bool rightFacing = true;
     public float changePower = 1;
     float vertP = 5;
     float power = 3;
-
     private bool inputForgiveness = false;
 
-    private bool trackerCD = false;
-    float trackerStart;
-    public float trackerInterval = 0.5f;
 
     private bool charging = false;
     public bool flying = false;
@@ -32,6 +35,13 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        trackers = new GameObject[numberOfTrackers];
+
+        for (int i = 0; i < numberOfTrackers; i++)
+        {
+            trackers[i] = Instantiate(trackerPrefab,transform.position, Quaternion.identity);
+            trackers[i].SetActive(false);
+        }
     }
 
     void Update()
@@ -65,23 +75,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 animator.SetFloat("overallCharge", vertP + power - 8);
 
-                if (!trackerCD)
-                {
-                    GameObject target = Instantiate(tracker, new Vector2(transform.position.x, transform.position.y + 1), transform.rotation);
-                    trackerRb = target.GetComponent<Rigidbody2D>();
-                    trackerRb.velocity = new Vector2(power, vertP);
-                    trackerCD = true;
-                    trackerStart = Time.time;
-
-                }
-                else
-                {
-                    float trackerLeft = Time.time - trackerStart;
-                    if (trackerLeft > trackerInterval)
-                    {
-                        trackerCD = false;
-                    }
-                }
+                
 
             }
             //charge while facing left
@@ -109,25 +103,15 @@ public class PlayerMovement : MonoBehaviour
                 animator.SetFloat("overallCharge", vertP + -power - 8);
 
 
-                if (!trackerCD)
+               
+
+            }
+            if (charging)
+            {
+                for (int i = 0; i <trackers.LongLength; i++)
                 {
-                    GameObject target = Instantiate(tracker, new Vector2(transform.position.x, transform.position.y + 1), transform.rotation);
-                    trackerRb = target.GetComponent<Rigidbody2D>();
-                    trackerRb.velocity = new Vector2(power, vertP);
-
-                    trackerCD = true;
-                    trackerStart = Time.time;
-
+                    trackers[i].transform.position = PointPos(i * 0.1f);
                 }
-                else
-                {
-                    float trackerLeft = Time.time - trackerStart;
-                    if (trackerLeft > trackerInterval)
-                    {
-                        trackerCD = false;
-                    }
-                }
-
             }
             //ground movement
             if (movable)
@@ -158,7 +142,7 @@ public class PlayerMovement : MonoBehaviour
         
             //begin charging
 
-            if (Input.GetKeyDown(KeyCode.Space) && !charging && !flying)
+        if (Input.GetKeyDown(KeyCode.Space) && !charging && !flying)
         {
             rb.velocity = new Vector2(0, rb.velocity.y / 4);
             rb.gravityScale = 0.1f;
@@ -168,6 +152,10 @@ public class PlayerMovement : MonoBehaviour
             {
                 power *= -1f;
             }
+            for(int i = 0; i < trackers.Length; i++)
+            {
+                trackers[i].SetActive(true);
+            }
         }
         if (Input.GetKeyDown(KeyCode.LeftShift) && charging && !flying)
         {
@@ -176,10 +164,13 @@ public class PlayerMovement : MonoBehaviour
             movable = true;
             charging = false;
             rb.gravityScale = 1f;
-            trackerCD = false;
             vertP = 5;
             power = 3;
             inputForgiveness = true;
+            for (int i = 0; i < trackers.Length; i++)
+            {
+                trackers[i].SetActive(false);
+            }
         }
         //release the jump
         if (Input.GetKeyUp(KeyCode.Space) && charging)
@@ -187,16 +178,18 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("Flying", true);
 
             animator.SetFloat("overallCharge", 0);
-
+            
             charging = false;
             flying = true;
             rb.gravityScale = 1f;
             rb.velocity = new Vector2(power, vertP);
-            transform.Translate(0, 0.1f,0);
-            trackerCD = false;
             vertP = 5;
             power = 3;
-
+            transform.Translate(0, 0.1f, 0);
+            for (int i = 0; i < trackers.Length; i++)
+            {
+                trackers[i].SetActive(false);
+            }
         }
 
 
@@ -207,7 +200,6 @@ public class PlayerMovement : MonoBehaviour
             movable = true;
             charging = false;
             rb.gravityScale = 1f;
-            trackerCD = false;
             vertP = 5;
             power = 3;
             inputForgiveness = false;
@@ -216,6 +208,12 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("Flying", false);
         animator.SetBool("Crash", false);
 
+    }
+
+    Vector2 PointPos(float t)
+    {
+        Vector2 currentPointPos = new Vector2 (transform.position.x, transform.position.y + 1) + new Vector2(power, vertP) * t + 0.5f * Physics2D.gravity * (t * t);
+        return currentPointPos;
     }
 
 
