@@ -6,7 +6,7 @@ public class PlayerHealth : MonoBehaviour
 {
     private Checkpoint checkpointScript;
     private int priority;
-    public GameObject currentCheckpoint;
+    public  GameObject currentCheckpoint;
     private Rigidbody2D rb;
     private PlayerMovement playerMovement;
     void Start()
