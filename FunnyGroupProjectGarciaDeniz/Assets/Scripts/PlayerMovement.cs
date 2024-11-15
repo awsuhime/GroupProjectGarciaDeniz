@@ -205,6 +205,10 @@ public class PlayerMovement : MonoBehaviour
             inputForgiveness = false;
         flying = false;
         charging = false;
+        for (int i = 0; i < trackers.Length; i++)
+        {
+            trackers[i].SetActive(false);
+        }
         animator.SetBool("Flying", false);
         animator.SetBool("Crash", false);
 
