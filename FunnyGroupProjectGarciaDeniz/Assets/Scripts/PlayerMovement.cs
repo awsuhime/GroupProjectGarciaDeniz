@@ -50,6 +50,11 @@ public class PlayerMovement : MonoBehaviour
         {
             float hori = Input.GetAxisRaw("Horizontal");
             float vert = Input.GetAxisRaw("Vertical");
+            if (!movable)
+            {
+                animator.SetBool("Walking", false);
+
+            }
 
             //charge while facing right
             if (charging && rightFacing)
@@ -83,6 +88,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 vertP += vert * changePower * Time.deltaTime;
                 power += hori * changePower * Time.deltaTime;
+                
                 //Caveman clamp
                 if (vertP > 7f)
                 {
@@ -116,7 +122,15 @@ public class PlayerMovement : MonoBehaviour
             //ground movement
             if (movable)
             {
+                if (hori != 0)
+                {
+                    animator.SetBool("Walking", true);
+                }
+                else
+                {
+                    animator.SetBool("Walking", false);
 
+                }
                 if (!inputForgiveness)
                 {
                     rb.velocity = new Vector2(hori * speed, rb.velocity.y);
