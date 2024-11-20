@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -50,7 +51,20 @@ public class PlayerMovement : MonoBehaviour
         {
             float hori = Input.GetAxisRaw("Horizontal");
             float vert = Input.GetAxisRaw("Vertical");
-            if (!movable)
+            if (!charging && !flying && movable)
+            {
+                if (hori != 0 || vert != 0)
+                {
+                    animator.SetBool("Walking", true);
+
+                }
+                else
+                {
+                    animator.SetBool("Walking", false);
+
+                }
+            }
+            else
             {
                 animator.SetBool("Walking", false);
 
@@ -122,15 +136,7 @@ public class PlayerMovement : MonoBehaviour
             //ground movement
             if (movable)
             {
-                if (hori != 0)
-                {
-                    animator.SetBool("Walking", true);
-                }
-                else
-                {
-                    animator.SetBool("Walking", false);
-
-                }
+                
                 if (!inputForgiveness)
                 {
                     rb.velocity = new Vector2(hori * speed, rb.velocity.y);
@@ -161,6 +167,7 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector2(0, rb.velocity.y / 4);
             rb.gravityScale = 0.1f;
             charging = true;
+
             movable = false;
             if (!rightFacing)
             {
@@ -177,6 +184,7 @@ public class PlayerMovement : MonoBehaviour
 
             movable = true;
             charging = false;
+
             rb.gravityScale = 1f;
             vertP = 5;
             power = 3;
@@ -194,6 +202,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetFloat("overallCharge", 0);
             
             charging = false;
+
             flying = true;
             rb.gravityScale = 1f;
             rb.velocity = new Vector2(power, vertP);
@@ -213,7 +222,9 @@ public class PlayerMovement : MonoBehaviour
     {
             movable = true;
             charging = false;
-            rb.gravityScale = 1f;
+        animator.SetFloat("overallCharge", 0);
+
+        rb.gravityScale = 1f;
             vertP = 5;
             power = 3;
             inputForgiveness = false;
