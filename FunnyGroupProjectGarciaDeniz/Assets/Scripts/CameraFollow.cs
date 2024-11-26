@@ -1,22 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
+using UnityEngine.U2D;
+using System.Reflection;
 
 public class CameraFollow : MonoBehaviour
 {
-    public GameObject follow;
+    CinemachineBrain CB;
+    object Internal;
+    FieldInfo OrthoInfo;
     void Start()
     {
-        
+        CB = GetComponent<CinemachineBrain>();
+        Internal = typeof(PixelPerfectCamera).GetField("m_internal", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GetComponent<PixelPerfectCamera>());
+        OrthoInfo = Internal.GetType().GetField("orthoSize", BindingFlags.NonPublic | BindingFlags.Instance);
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        if (follow != null)
+        var cam = CB.ActiveVirtualCamera as CinemachineVirtualCamera;
+        if (cam)
         {
-            transform.position = new Vector3(follow.transform.position.x, follow.transform.position.y, -10);
-            
+            cam.m_Lens.OrthographicSize = (float)OrthoInfo.GetValue(Internal);
         }
+       
     }
 }
