@@ -146,7 +146,16 @@ public class PlayerMovement : MonoBehaviour
                 
                 if (!inputForgiveness)
                 {
-                    rb.velocity = new Vector2(hori * speed, rb.velocity.y);
+                    if (sticky)
+                    {
+                        rb.velocity = new Vector2(hori * speed * 0.8f, rb.velocity.y);
+
+                    }
+                    else
+                    {
+                        rb.velocity = new Vector2(hori * speed, rb.velocity.y);
+
+                    }
                     if (hori < 0)
                     {
                         sprite.flipX = true;

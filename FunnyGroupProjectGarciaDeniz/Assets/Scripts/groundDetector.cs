@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class groundDetector : MonoBehaviour
@@ -22,6 +23,7 @@ public class groundDetector : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         
+        
         if (playerMovement.flying)
         {
             if (collision.CompareTag("Terrain"))
@@ -34,6 +36,22 @@ public class groundDetector : MonoBehaviour
                 animator.SetBool("Crash", false);
             }
            
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Glue"))
+        {
+            playerMovement.sticky = true;
+        }
+        
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Glue"))
+        {
+            playerMovement.sticky = false;
         }
     }
 }

@@ -7,6 +7,7 @@ TagManager:
   - Terrain
   - Checkpoint
   - Spike
+  - Glue
   layers:
   - Default
   - TransparentFX
