@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public int numberOfTrackers = 9;
 
     //Changing variables
+    public bool sticky = false;
     public bool gameStart = false;
     private bool rightFacing = true;
     public float changePower = 1;
@@ -88,9 +89,13 @@ public class PlayerMovement : MonoBehaviour
                 {
                     power = 5f;
                 }
-                else if (power < 1f)
+                else if (power < 0.2f)
                 {
-                    power = 1f;
+                    power = -0.2f;
+                    rightFacing = false;
+                    sprite.flipX = true;
+
+
                 }
                 animator.SetFloat("overallCharge", vertP + power - 8);
 
@@ -116,9 +121,11 @@ public class PlayerMovement : MonoBehaviour
                 {
                     power = -5f;
                 }
-                else if (power > -1f)
+                else if (power > -0.2f)
                 {
-                    power = -1f;
+                    power = 0.2f;
+                    rightFacing = true;
+                    sprite.flipX = false;
                 }
                 animator.SetFloat("overallCharge", vertP + -power - 8);
 
@@ -205,7 +212,16 @@ public class PlayerMovement : MonoBehaviour
 
             flying = true;
             rb.gravityScale = 1f;
-            rb.velocity = new Vector2(power, vertP);
+            if (!sticky)
+            {
+                rb.velocity = new Vector2(power, vertP);
+
+            }
+            else
+            {
+                rb.velocity = new Vector2(power / 2, vertP / 2);
+
+            }
             vertP = 5;
             power = 3;
             transform.Translate(0, 0.1f, 0);
@@ -220,6 +236,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void ResetVariables()
     {
+        sticky = false;
             movable = true;
             charging = false;
         animator.SetFloat("overallCharge", 0);
@@ -241,7 +258,17 @@ public class PlayerMovement : MonoBehaviour
 
     Vector2 PointPos(float t)
     {
-        Vector2 currentPointPos = new Vector2 (transform.position.x, transform.position.y + 1) + new Vector2(power, vertP) * t + 0.5f * Physics2D.gravity * (t * t);
+        Vector2 currentPointPos;
+        if (!sticky)
+        {
+            currentPointPos = new Vector2(transform.position.x, transform.position.y + 1) + new Vector2(power, vertP) * t + 0.5f * Physics2D.gravity * (t * t);
+
+        }
+        else
+        {
+            currentPointPos = new Vector2(transform.position.x, transform.position.y + 1) + new Vector2(power / 2, vertP / 2) * t + 0.5f * Physics2D.gravity * (t * t);
+
+        }
         return currentPointPos;
     }
 
