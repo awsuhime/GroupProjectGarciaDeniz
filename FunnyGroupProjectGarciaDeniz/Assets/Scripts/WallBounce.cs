@@ -20,6 +20,7 @@ public class WallBounce : MonoBehaviour
     {
         if (collision.CompareTag("Terrain"))
         {
+            Debug.Log("Hit");
             playerRb.velocity = new Vector2(playerRb.velocity.x * -0.5f, playerRb.velocity.y);
             animator.SetBool("Crash", true);
         }

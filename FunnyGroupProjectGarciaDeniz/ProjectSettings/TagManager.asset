@@ -8,6 +8,7 @@ TagManager:
   - Checkpoint
   - Spike
   - Glue
+  - Bounce
   layers:
   - Default
   - TransparentFX

@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public int speed = 1;
     public bool movable = true;
     private Rigidbody2D rb;
+    public float dirForgiveness = 0.2f;
     
     //Visual Components
     private SpriteRenderer sprite;
@@ -21,13 +22,18 @@ public class PlayerMovement : MonoBehaviour
     public int numberOfTrackers = 9;
 
     //Changing variables
+    public int bounces = 0;
     public bool sticky = false;
     public bool gameStart = false;
     private bool rightFacing = true;
-    public float changePower = 1;
+    public float horiChangePower = 1.5f;
+    public float vertChangePower = 1;
     float vertP = 5;
     float power = 3;
+
+    //Input and direction forgiveness
     private bool inputForgiveness = false;
+    private bool dirFor = false;
 
 
     private bool charging = false;
@@ -74,8 +80,8 @@ public class PlayerMovement : MonoBehaviour
             //charge while facing right
             if (charging && rightFacing)
             {
-                vertP += vert * changePower * Time.deltaTime;
-                power += hori * changePower * Time.deltaTime;
+                vertP += vert * horiChangePower * Time.deltaTime;
+                power += hori * vertChangePower * Time.deltaTime;
                 //Caveman clamp
                 if (vertP > 7f)
                 {
@@ -89,24 +95,28 @@ public class PlayerMovement : MonoBehaviour
                 {
                     power = 5f;
                 }
-                else if (power < 0.2f)
+                else if (power < 0.6f)
                 {
-                    power = -0.2f;
+                    power = -0.6f;
                     rightFacing = false;
                     sprite.flipX = true;
 
-
                 }
                 animator.SetFloat("overallCharge", vertP + power - 8);
-
+                if (vert == 0 && dirFor && hori < 0)
+                {
+                    power = -3f;
+                    rightFacing = false;
+                    sprite.flipX = true;
+                }
                 
 
             }
             //charge while facing left
             else if (charging && !rightFacing)
             {
-                vertP += vert * changePower * Time.deltaTime;
-                power += hori * changePower * Time.deltaTime;
+                vertP += vert * vertChangePower * Time.deltaTime;
+                power += hori * horiChangePower * Time.deltaTime;
                 
                 //Caveman clamp
                 if (vertP > 7f)
@@ -121,16 +131,19 @@ public class PlayerMovement : MonoBehaviour
                 {
                     power = -5f;
                 }
-                else if (power > -0.2f)
+                else if (power > -0.6f)
                 {
-                    power = 0.2f;
+                    power = 0.6f;
                     rightFacing = true;
                     sprite.flipX = false;
                 }
                 animator.SetFloat("overallCharge", vertP + -power - 8);
-
-
-               
+                if (vert == 0 && dirFor && hori > 0)
+                {
+                    power = 3f;
+                    rightFacing = true;
+                    sprite.flipX = false;
+                }
 
             }
             if (charging)
@@ -178,7 +191,7 @@ public class PlayerMovement : MonoBehaviour
         
             //begin charging
 
-        if (Input.GetKeyDown(KeyCode.Space) && !charging && !flying)
+        if (Input.GetKeyDown(KeyCode.Space) && !charging && !flying && !sticky)
         {
             rb.velocity = new Vector2(0, rb.velocity.y / 4);
             rb.gravityScale = 0.1f;
@@ -193,6 +206,9 @@ public class PlayerMovement : MonoBehaviour
             {
                 trackers[i].SetActive(true);
             }
+            dirFor = true;
+            Invoke(nameof(dirForgive), dirForgiveness);
+            
         }
         if (Input.GetKeyDown(KeyCode.LeftShift) && charging && !flying)
         {
@@ -245,6 +261,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void ResetVariables()
     {
+        bounces = 0;
         sticky = false;
             movable = true;
             charging = false;
@@ -281,5 +298,51 @@ public class PlayerMovement : MonoBehaviour
         return currentPointPos;
     }
 
+    private void dirForgive()
+    {
+        dirFor = false;
+    }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Bounce"))
+        {
+            Debug.Log("Velocity.y: " + rb.velocity.y);
+            if (Mathf.Abs(rb.velocity.y) > 2.5f)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, -rb.velocity.y);
+                animator.SetBool("Flying", true);
+
+                animator.SetFloat("overallCharge", 0);
+
+                charging = false;
+
+                flying = true;
+                rb.gravityScale = 1f;
+                
+                vertP = 5;
+                power = 3;
+                transform.Translate(0, 0.1f, 0);
+                for (int i = 0; i < trackers.Length; i++)
+                {
+                    trackers[i].SetActive(false);
+                }
+                Debug.Log("Velcoity.x: " + rb.velocity.x);
+                if (Mathf.Abs(rb.velocity.x) < 1.2f)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * Mathf.Pow(0.5f, bounces));
+                    bounces++;
+
+                }
+
+                flying = true;
+                movable = false;
+            }
+            else
+            {
+                Debug.Log("Not enough velocity");
+                ResetVariables();
+            }
+        }
+    }
 }

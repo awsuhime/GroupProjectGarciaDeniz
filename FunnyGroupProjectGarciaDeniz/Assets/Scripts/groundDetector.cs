@@ -8,6 +8,7 @@ public class groundDetector : MonoBehaviour
     private PlayerMovement playerMovement;
     public ParticleSystem dirtParticle;
     private Animator animator;
+    public GameObject stickyOverlay;
 
     void Start()
     {
@@ -32,6 +33,7 @@ public class groundDetector : MonoBehaviour
                 dirtParticle.Play();
                 playerMovement.flying = false;
                 playerMovement.movable = true;
+                playerMovement.bounces = 0;
                 animator.SetBool("Flying", false);
                 animator.SetBool("Crash", false);
             }
@@ -44,6 +46,7 @@ public class groundDetector : MonoBehaviour
         if (collision.CompareTag("Glue"))
         {
             playerMovement.sticky = true;
+            stickyOverlay.SetActive(true);
         }
         
     }
@@ -52,6 +55,7 @@ public class groundDetector : MonoBehaviour
         if (collision.CompareTag("Glue"))
         {
             playerMovement.sticky = false;
+            stickyOverlay.SetActive(false);
         }
     }
 }
