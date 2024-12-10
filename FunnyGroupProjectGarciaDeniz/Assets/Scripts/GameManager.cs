@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
 {
     public PlayerMovement playerMovement;
     public PlayerHealth playerHealth;
+    private AudioSource audioSource;
+    public AudioClip easyMusic;
+    public AudioClip hardMusic;
     public GameObject startUI;
     public GameObject hardcoreCheckpoint;
     public GameObject easyBG;
@@ -14,6 +17,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Time.timeScale = 0;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -26,6 +30,8 @@ public class GameManager : MonoBehaviour
         playerMovement.gameStart = true;
         startUI.SetActive(false);
         Time.timeScale = 1;
+        audioSource.clip = easyMusic;
+        audioSource.Play();
     }
 
     public void HardcoreStart()
@@ -37,5 +43,7 @@ public class GameManager : MonoBehaviour
         playerMovement.gameObject.transform.position = hardcoreCheckpoint.transform.position;
         easyBG.SetActive(false);
         hardBG.SetActive(true);
+        audioSource.clip = hardMusic;
+        audioSource.Play();
     }
 }

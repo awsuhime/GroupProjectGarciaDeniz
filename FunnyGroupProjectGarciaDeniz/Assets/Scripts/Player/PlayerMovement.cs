@@ -12,9 +12,11 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     public float dirForgiveness = 0.2f;
     
-    //Visual Components
+    //Visual/audio Components
     private SpriteRenderer sprite;
     private Animator animator;
+    private AudioSource audioSource;
+    
 
     //Trajectory Visualization
     public GameObject trackerPrefab;
