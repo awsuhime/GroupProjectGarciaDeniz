@@ -6,9 +6,10 @@ using UnityEngine;
 public class groundDetector : MonoBehaviour
 {
     private PlayerMovement playerMovement;
-    public ParticleSystem dirtParticle;
+    public GameObject dirtParticle;
     private Animator animator;
     public GameObject stickyOverlay;
+    
 
     void Start()
     {
@@ -30,10 +31,11 @@ public class groundDetector : MonoBehaviour
             if (collision.CompareTag("Terrain"))
             {
                 Debug.Log("Groundhit; name:" + collision.gameObject.name);
-                dirtParticle.Play();
                 playerMovement.flying = false;
                 playerMovement.movable = true;
                 playerMovement.bounces = 0;
+                Instantiate(dirtParticle, new(transform.position.x, transform.position.y + 0.6f, -1), Quaternion.Euler(0, -90, 90));
+
                 animator.SetBool("Flying", false);
                 animator.SetBool("Crash", false);
             }

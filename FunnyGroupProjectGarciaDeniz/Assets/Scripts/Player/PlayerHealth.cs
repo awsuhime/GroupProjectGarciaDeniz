@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     private Checkpoint checkpointScript;
+    public GameObject deathParticle;
     private int priority;
     public  GameObject currentCheckpoint;
     private Rigidbody2D rb;
@@ -49,6 +50,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Respawn()
     {
+        Instantiate(deathParticle, new (transform.position.x, transform.position.y + 1.7f, -1), Quaternion.Euler(0,-90,90));
         playerMovement.ResetVariables();
         gameObject.transform.position = currentCheckpoint.transform.position;
         rb.velocity = Vector2.zero;

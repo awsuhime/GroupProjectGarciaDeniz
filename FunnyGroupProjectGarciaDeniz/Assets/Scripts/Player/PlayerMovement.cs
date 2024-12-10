@@ -31,10 +31,10 @@ public class PlayerMovement : MonoBehaviour
     float vertP = 5;
     float power = 3;
 
-    //Input and direction forgiveness
+    //forgiveness
     private bool inputForgiveness = false;
     private bool dirFor = false;
-
+    private bool jumpForgiveness = false;
 
     private bool charging = false;
     public bool flying = false;
@@ -95,15 +95,15 @@ public class PlayerMovement : MonoBehaviour
                 {
                     power = 5f;
                 }
-                else if (power < 0.6f)
+                else if (power < 0.3f)
                 {
-                    power = -0.6f;
+                    power = -0.3f;
                     rightFacing = false;
                     sprite.flipX = true;
 
                 }
                 animator.SetFloat("overallCharge", vertP + power - 8);
-                if (vert == 0 && dirFor && hori < 0)
+                if (dirFor && hori < 0)
                 {
                     power = -3f;
                     rightFacing = false;
@@ -131,14 +131,14 @@ public class PlayerMovement : MonoBehaviour
                 {
                     power = -5f;
                 }
-                else if (power > -0.6f)
+                else if (power > -0.3f)
                 {
-                    power = 0.6f;
+                    power = 0.3f;
                     rightFacing = true;
                     sprite.flipX = false;
                 }
                 animator.SetFloat("overallCharge", vertP + -power - 8);
-                if (vert == 0 && dirFor && hori > 0)
+                if (dirFor && hori > 0)
                 {
                     power = 3f;
                     rightFacing = true;
@@ -191,9 +191,9 @@ public class PlayerMovement : MonoBehaviour
         
             //begin charging
 
-        if (Input.GetKeyDown(KeyCode.Space) && !charging && !flying && !sticky)
+        if (Input.GetKey(KeyCode.Space) && !charging && !flying && !sticky && !jumpForgiveness)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y / 4);
+            rb.velocity = new Vector2(0, 0);
             rb.gravityScale = 0.1f;
             charging = true;
 
@@ -206,7 +206,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 trackers[i].SetActive(true);
             }
-            dirFor = true;
+            //dirFor = true;
             Invoke(nameof(dirForgive), dirForgiveness);
             
         }
@@ -221,10 +221,16 @@ public class PlayerMovement : MonoBehaviour
             vertP = 5;
             power = 3;
             inputForgiveness = true;
+            jumpForgiveness = true;
             for (int i = 0; i < trackers.Length; i++)
             {
                 trackers[i].SetActive(false);
             }
+        }
+        //end jump forgiveness
+        if (Input.GetKeyUp(KeyCode.Space) && jumpForgiveness)
+        {
+            jumpForgiveness = false;
         }
         //release the jump
         if (Input.GetKeyUp(KeyCode.Space) && charging)
