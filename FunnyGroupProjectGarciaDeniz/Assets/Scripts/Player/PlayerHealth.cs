@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
+    public static int deaths = 0;
     private Checkpoint checkpointScript;
     public GameObject deathParticle;
     private int priority;
@@ -50,6 +51,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Respawn()
     {
+        deaths++;
         Instantiate(deathParticle, new (transform.position.x, transform.position.y + 1.7f, -1), Quaternion.Euler(0,-90,90));
         playerMovement.ResetVariables();
         gameObject.transform.position = currentCheckpoint.transform.position;

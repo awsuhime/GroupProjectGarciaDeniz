@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     //Changing variables
     public int bounces = 0;
     public bool sticky = false;
-    public bool gameStart = false;
+    public static bool gameStart = false;
     private bool rightFacing = true;
     public float horiChangePower = 1.5f;
     public float vertChangePower = 1;

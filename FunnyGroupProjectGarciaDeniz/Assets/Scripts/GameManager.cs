@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class GameManager : MonoBehaviour
     public GameObject hardcoreCheckpoint;
     public GameObject easyBG;
     public GameObject hardBG;
+    public GameObject pauseUI;
+    public bool paused = false;
     
     void Start()
     {
@@ -22,12 +25,28 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape) && PlayerMovement.gameStart && !paused)
+        {
+            Time.timeScale = 0;
+            pauseUI.SetActive(true);
+            paused = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && PlayerMovement.gameStart && paused)
+        {
+            Time.timeScale = 1;
+            pauseUI.SetActive(false);
+            paused = false;
+        }
+    }
+
+    public void returnToTitle()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void gameStart()
     {
-        playerMovement.gameStart = true;
+        PlayerMovement.gameStart = true;
         startUI.SetActive(false);
         Time.timeScale = 1;
         audioSource.clip = easyMusic;
@@ -36,7 +55,7 @@ public class GameManager : MonoBehaviour
 
     public void HardcoreStart()
     {
-        playerMovement.gameStart = true;
+        PlayerMovement.gameStart = true;
         startUI.SetActive(false);
         Time.timeScale = 1;
         playerHealth.currentCheckpoint = hardcoreCheckpoint;
