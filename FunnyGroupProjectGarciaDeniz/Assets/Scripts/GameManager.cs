@@ -10,8 +10,10 @@ public class GameManager : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip easyMusic;
     public AudioClip hardMusic;
+    public AudioClip mtMusic;
     public GameObject startUI;
     public GameObject hardcoreCheckpoint;
+    public GameObject mouseTrapCheckpoint;
     public GameObject easyBG;
     public GameObject hardBG;
     public GameObject pauseUI;
@@ -63,6 +65,19 @@ public class GameManager : MonoBehaviour
         easyBG.SetActive(false);
         hardBG.SetActive(true);
         audioSource.clip = hardMusic;
+        audioSource.Play();
+    }
+
+    public void MouseTrapStart()
+    {
+        PlayerMovement.gameStart = true;
+        startUI.SetActive(false);
+        Time.timeScale = 1;
+        playerHealth.currentCheckpoint = mouseTrapCheckpoint;
+        playerMovement.gameObject.transform.position = mouseTrapCheckpoint.transform.position;
+        easyBG.SetActive(false);
+        hardBG.SetActive(true);
+        audioSource.clip = mtMusic;
         audioSource.Play();
     }
 }
