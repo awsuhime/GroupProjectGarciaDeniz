@@ -9,6 +9,7 @@ TagManager:
   - Spike
   - Glue
   - Bounce
+  - Mousetrap
   layers:
   - Default
   - TransparentFX

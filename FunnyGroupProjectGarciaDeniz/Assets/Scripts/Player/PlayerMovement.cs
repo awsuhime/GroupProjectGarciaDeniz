@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     //Changing variables
     public int bounces = 0;
     public bool sticky = false;
+    public bool snapped = false;
     public static bool gameStart = false;
     private bool rightFacing = true;
     public float horiChangePower = 1.5f;
@@ -195,7 +196,11 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) && !charging && !flying && !sticky && !jumpForgiveness)
         {
             rb.velocity = new Vector2(0, 0);
-            rb.gravityScale = 0.1f;
+            if (!snapped)
+            {
+                rb.gravityScale = 0.1f;
+
+            }
             charging = true;
 
             movable = false;
@@ -239,7 +244,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("Flying", true);
 
             animator.SetFloat("overallCharge", 0);
-            
+            snapped = false;
             charging = false;
 
             flying = true;
@@ -272,6 +277,7 @@ public class PlayerMovement : MonoBehaviour
         sticky = false;
             movable = true;
             charging = false;
+        snapped = false;
         animator.SetFloat("overallCharge", 0);
 
         rb.gravityScale = 1f;
@@ -352,5 +358,19 @@ public class PlayerMovement : MonoBehaviour
                 ResetVariables();
             }
         }
+        else if (!snapped && collision.gameObject.CompareTag("Mousetrap"))
+        {
+            snapped = true;
+            transform.position = new Vector3(collision.gameObject.transform.position.x, collision.gameObject.transform.position.y - 1, 0);
+            rb.velocity = Vector2.zero;
+            rb.gravityScale = 0;
+            flying = false;
+            movable = false;
+            bounces = 0;
+            animator.SetBool("Flying", false);
+            animator.SetBool("Crash", false);
+
+        }
+
     }
 }
