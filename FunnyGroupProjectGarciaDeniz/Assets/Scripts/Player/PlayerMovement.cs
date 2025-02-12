@@ -60,6 +60,19 @@ public class PlayerMovement : MonoBehaviour
         {
             float hori = Input.GetAxisRaw("Horizontal");
             float vert = Input.GetAxisRaw("Vertical");
+            if (snapped && !charging)
+            {
+                if (hori < 0)
+                {
+                    sprite.flipX = true;
+                    rightFacing = false;
+                }
+                else if (hori > 0)
+                {
+                    sprite.flipX = false;
+                    rightFacing = true;
+                }
+            }
             if (!charging && !flying && movable)
             {
                 if (hori != 0 || vert != 0)
@@ -218,20 +231,36 @@ public class PlayerMovement : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.LeftShift) && charging && !flying)
         {
-            animator.SetFloat("overallCharge", 0);
-
-            movable = true;
-            charging = false;
-
-            rb.gravityScale = 1f;
-            vertP = 5;
-            power = 3;
-            inputForgiveness = true;
-            jumpForgiveness = true;
-            for (int i = 0; i < trackers.Length; i++)
+            if (!snapped)
             {
-                trackers[i].SetActive(false);
+                transform.parent = null;
+                animator.SetFloat("overallCharge", 0);
+
+                movable = true;
+                charging = false;
+                rb.gravityScale = 1f;
+                vertP = 5;
+                power = 3;
+                inputForgiveness = true;
+                jumpForgiveness = true;
+                for (int i = 0; i < trackers.Length; i++)
+                {
+                    trackers[i].SetActive(false);
+                }
             }
+            else
+            {
+                animator.SetFloat("overallCharge", 0);
+                charging = false;
+                vertP = 5;
+                power = 3;
+                jumpForgiveness = true;
+                for (int i = 0; i < trackers.Length; i++)
+                {
+                    trackers[i].SetActive(false);
+                }
+            }
+            
         }
         //end jump forgiveness
         if (Input.GetKeyUp(KeyCode.Space) && jumpForgiveness)
@@ -246,7 +275,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetFloat("overallCharge", 0);
             snapped = false;
             charging = false;
-
+            transform.parent = null;
             flying = true;
             rb.gravityScale = 1f;
             if (!sticky)
@@ -273,6 +302,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void ResetVariables()
     {
+        if (charging)
+        {
+            jumpForgiveness = true;
+
+        }
         bounces = 0;
         sticky = false;
             movable = true;
@@ -361,7 +395,7 @@ public class PlayerMovement : MonoBehaviour
         else if (!snapped && collision.gameObject.CompareTag("Mousetrap"))
         {
             snapped = true;
-            transform.position = new Vector3(collision.gameObject.transform.position.x, collision.gameObject.transform.position.y - 1, 0);
+            transform.position = collision.gameObject.transform.position;
             rb.velocity = Vector2.zero;
             rb.gravityScale = 0;
             flying = false;
@@ -369,7 +403,7 @@ public class PlayerMovement : MonoBehaviour
             bounces = 0;
             animator.SetBool("Flying", false);
             animator.SetBool("Crash", false);
-
+            gameObject.transform.parent = collision.gameObject.transform;
         }
 
     }
