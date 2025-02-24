@@ -91,6 +91,20 @@ public class PlayerMovement : MonoBehaviour
                 animator.SetBool("Walking", false);
 
             }
+            if (charging && Input.GetKeyDown(KeyCode.E))
+            {
+                power *= -1;
+                if (rightFacing)
+                {
+                    rightFacing = false;
+                    sprite.flipX = true;
+                }
+                else
+                {
+                    rightFacing = true;
+                    sprite.flipX = false;
+                }
+            }
 
             //charge while facing right
             if (charging && rightFacing)
