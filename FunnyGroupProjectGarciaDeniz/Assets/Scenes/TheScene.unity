@@ -34820,7 +34820,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathParticle: {fileID: 4692134923900638100, guid: c5cf080554a7d48488c063d0a6a1388e, type: 3}
-  currentCheckpoint: {fileID: 2006459188}
+  currentCheckpoint: {fileID: 2137531162}
 --- !u!95 &1199087692
 Animator:
   serializedVersion: 5
