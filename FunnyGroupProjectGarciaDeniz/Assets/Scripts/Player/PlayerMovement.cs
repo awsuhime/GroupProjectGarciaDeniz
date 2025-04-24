@@ -32,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
     public float vertChangePower = 1;
     float vertP = 5;
     float power = 3;
-
+    public float multiplier = 1;
     //forgiveness
     private bool inputForgiveness = false;
     private bool dirFor = false;
@@ -294,7 +294,7 @@ public class PlayerMovement : MonoBehaviour
             rb.gravityScale = 1f;
             if (!sticky)
             {
-                rb.velocity = new Vector2(power, vertP);
+                rb.velocity = new Vector2(power, vertP) * multiplier;
 
             }
             else
