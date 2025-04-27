@@ -327,6 +327,7 @@ public class PlayerMovement : MonoBehaviour
             charging = false;
         snapped = false;
         animator.SetFloat("overallCharge", 0);
+        transform.parent = null;
 
         rb.gravityScale = 1f;
             vertP = 5;
