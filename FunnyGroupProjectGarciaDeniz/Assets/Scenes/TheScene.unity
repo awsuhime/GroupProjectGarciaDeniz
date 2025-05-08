@@ -38304,7 +38304,7 @@ MonoBehaviour:
   mtMusic: {fileID: 8300000, guid: 26ce9578610d5f244a002154f5fd6d6c, type: 3}
   startUI: {fileID: 1652852865}
   hardcoreCheckpoint: {fileID: 1760538312}
-  mouseTrapCheckpoint: {fileID: 1169080781}
+  mouseTrapCheckpoint: {fileID: 1668801491}
   easyBG: {fileID: 1789802817}
   hardBG: {fileID: 1243681189}
   pauseUI: {fileID: 1262075542}
