@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -15,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator animator;
     private AudioSource audioSource;
-    
+    private BoxCollider2D colli;
 
     //Trajectory Visualization
     public GameObject trackerPrefab;
@@ -40,13 +41,14 @@ public class PlayerMovement : MonoBehaviour
 
     private bool charging = false;
     public bool flying = false;
+    public LayerMask spike;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         trackers = new GameObject[numberOfTrackers];
-
+        colli = GetComponent<BoxCollider2D>();
         for (int i = 0; i < numberOfTrackers; i++)
         {
             trackers[i] = Instantiate(trackerPrefab,transform.position, Quaternion.identity);
@@ -56,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+       
         if (gameStart)
         {
             float hori = Input.GetAxisRaw("Horizontal");
@@ -284,6 +287,7 @@ public class PlayerMovement : MonoBehaviour
         //release the jump
         if (Input.GetKeyUp(KeyCode.Space) && charging)
         {
+            
             animator.SetBool("Flying", true);
 
             animator.SetFloat("overallCharge", 0);

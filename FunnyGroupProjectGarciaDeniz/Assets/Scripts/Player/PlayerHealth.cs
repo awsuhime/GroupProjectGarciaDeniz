@@ -45,7 +45,10 @@ public class PlayerHealth : MonoBehaviour
         }
         else if (collision.CompareTag("Spike"))
         {
-            Respawn();
+             
+             Respawn();
+            
+           
         }
     }
 
